@@ -1,0 +1,25 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des abonnements</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+<body>
+    <h1>Mes abonnements</h1>
+
+    <button id="btn-ajouter">+ Ajouter un abonnement</button>
+<div id="form-ajouter" style="display:none;"></div>
+
+    <div id="abonnements-container"></div>
+
+ 
+
+    <a href="{% url 'multiscribe-home' %}">← Retour au tableau de bord</a>
+
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>

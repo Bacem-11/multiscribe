@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html>
+    <head>
+
+        <title>inscription </title>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    </head>
+    <body>
+  
+
+        <h2>Créer un compte</h2>
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">S'inscrire</button>
+        </form>
+        <br>
+        <a>J'ai déjà un compte</a>
+        
+        
+        <a href="{% url 'multiscribe-login' %}">
+            <button type="button">Se connecter</button>
+          </a> 
+        
+    
+        
+          <script src="{% static 'js/main.js' %}"></script>
+
+    </body>
+</html>

@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulaire Abonnement</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>{{ form.instance.pk|yesno:"Modifier un abonnement,Ajouter un abonnement" }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">
+            {{ form.instance.pk|yesno:"Mettre à jour,Ajouter" }}
+        </button>
+    </form>
+
+    <a href="{% url 'multiscribe-liste' %}">← Retour à la liste</a>
+</body>
+</html>

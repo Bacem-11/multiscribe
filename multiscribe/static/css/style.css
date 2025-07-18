@@ -1,0 +1,98 @@
+/* static/multiscribe/style.css */
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9fafc;
+  padding: 2rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+#abonnements-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+#abonnements-container > div[data-id] {
+  background: #fff;
+  padding: 1.2rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-left: 6px solid #007bff;
+  transition: transform 0.2s ease;
+}
+
+#abonnements-container > div[data-id]:hover {
+  transform: translateY(-4px);
+}
+
+.nom {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #222;
+}
+
+.prix,
+.type,
+.date {
+  color: #555;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  margin-top: 10px;
+  margin-right: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.btn-supprimer {
+  background-color: #dc3545;
+}
+
+.btn-supprimer:hover {
+  background-color: #b52a37;
+}
+
+.form-modifier {
+  margin-top: 10px;
+}
+
+#total-mensuel,
+#total-annuel {
+  font-weight: bold;
+  color: #007bff;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 1rem;
+  }
+
+  button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  #abonnements-container > div[data-id] {
+    padding: 1rem;
+  }
+}

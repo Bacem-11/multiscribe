@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tableau de bord - Multiscribe</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Bienvenue sur votre tableau de bord</h1>
+
+    <div>
+        <a href="{% url 'ajouter_abonnement' %}"><button type="button">Ajouter un abonnement</button></a>
+        <a href="{% url 'multiscribe-liste' %}"><button type="button">Voir tous mes abonnements</button></a>
+
+        
+        <form method="POST" action="{% url 'multiscribe-logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Se déconnecter</button>
+        </form>
+    </div>
+
+    <h2>Total mensuel (ce mois) : <span id="total-mensuel">0.00</span> TND</h2>
+    <h2>Total annuel estimé : <span id="total-annuel">0.00</span> TND</h2>
+
+    <h3>Abonnements récents :</h3>
+    <div id="abonnements-container">
+        <p>Chargement...</p>
+    </div>
+
+    <script src="{% static 'js/home.js' %}"></script>
+</body>
+</html>
+
