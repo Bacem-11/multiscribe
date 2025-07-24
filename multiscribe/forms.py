@@ -13,7 +13,13 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
+    def __init__(self, *args, **kwargs):
+        super(CustomUserCreationForm, self).__init__(*args, **kwargs)
 
+        # Supprimer tous les help_texts
+        for field_name in self.fields:
+            self.fields[field_name].help_text = ''
+    
 
 
 class SubscriptionForm(forms.ModelForm):

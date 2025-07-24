@@ -3,13 +3,13 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Inscription - Multiscribe</title>
+  <title>Ajouter un abonnement</title>
 
-  <!-- ✅ Import de la police Poppins depuis Google Fonts -->
+  <!-- ✅ Police Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-    body {
+    html, body {
       margin: 0;
       padding: 0;
       background-color: #d3cee1;
@@ -24,8 +24,7 @@
       color: white;
       display: flex;
       align-items: center;
-      justify-content: flex;
-      padding: 0.5rem;
+      padding: 0.5rem 1rem;
       gap: 1rem;
       font-size: 1.5rem;
       font-weight: 600;
@@ -33,10 +32,8 @@
 
     .navbar .logo {
       height: 70px;
-      width: auto;
+      border-radius: 28%;
       object-fit: contain;
-      display: block;
-      border-radius:28%;
     }
 
     .center-wrapper {
@@ -47,19 +44,19 @@
       padding: 2rem;
     }
 
-    .center-container {
+    .form-container {
       background: white;
       padding: 2.5rem 3rem;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      max-width: 500px;
       width: 100%;
-      max-width: 400px;
-      text-align: center;
     }
 
-    .center-container h2 {
+    h2 {
       margin-bottom: 1.5rem;
       font-weight: 600;
+      text-align: center;
     }
 
     form {
@@ -68,54 +65,28 @@
       gap: 1rem;
     }
 
-    label {
-      font-weight: 500;
-      text-align: left;
-    }
-
-    input[type="text"],
-    input[type="password"],
-    input[type="email"] {
+    input, select {
       padding: 10px;
       font-size: 1rem;
       border: 1px solid #ccc;
       border-radius: 6px;
       width: 100%;
       box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
     }
 
     button {
       padding: 10px;
-      background-color: #007bff;
+      background-color: #2ecc71;
       border: none;
       color: white;
       border-radius: 6px;
       cursor: pointer;
       font-size: 1rem;
       transition: background-color 0.2s ease;
-      font-family: 'Poppins', sans-serif;
     }
 
     button:hover {
-      background-color: #0056b3;
-    }
-
-    .secondary-button {
-      background-color: #2ecc71;
-      margin-bottom: 1rem;
-    }
-
-    .secondary-button:hover {
       background-color: #27ae60;
-    }
-
-    a button {
-      background-color: #;
-    }
-
-    a button:hover {
-      background-color: #5a6268;
     }
   </style>
 </head>
@@ -123,36 +94,26 @@
 
   <!-- ✅ Barre de navigation -->
   <div class="navbar">
-    <img src="{% static 'images/logo3.png' %}" class="logo" alt="Logo Multiscribe">
-    Multiscribe
+    <img src="{% static 'images/logo3.png' %}" alt="Logo Multiscribe" class="logo">
+    Multiscribe - Ajouter un abonnement
   </div>
 
   <!-- ✅ Formulaire centré -->
   <div class="center-wrapper">
-    <div class="center-container">
-      <h2>Créer un compte</h2>
+    <div class="form-container">
+      <h2>Ajouter un abonnement</h2>
 
       <form method="post">
         {% csrf_token %}
-
-        <label for="id_username">Nom d'utilisateur :</label>
-        {{ form.username }}
-
-        <label for="id_email">Adresse e-mail :</label>
-        {{ form.email }}
-
-        <label for="id_password1">Mot de passe :</label>
-        {{ form.password1 }}
-
-        <label for="id_password2">Confirmation du mot de passe :</label>
-        {{ form.password2 }}
-
-        <button type="submit" class="secondary-button">S'inscrire</button>
+        <input type="text" name="nom" placeholder="Nom" required>
+        <input type="number" step="0.01" name="prix" placeholder="Prix" required>
+        <select name="type_facturation" required>
+          <option value="M">Mensuel</option>
+          <option value="A">Annuel</option>
+        </select>
+        <input type="date" name="date_prochain_paiement" required>
+        <button type="submit">Ajouter</button>
       </form>
-
-      <a href="{% url 'multiscribe-login' %}">
-        <button type="button">J'ai déjà un compte</button>
-      </a>
     </div>
   </div>
 

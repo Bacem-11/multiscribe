@@ -1,33 +1,159 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Tableau de bord - Multiscribe</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <meta charset="UTF-8">
+  <title>Tableau de bord - Multiscribe</title>
+
+  <!-- ✅ Police Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #d3cee1;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background-color: #5f37e0;
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      gap: 1rem;
+    }
+
+    .navbar .logo {
+      height: 70px;
+      border-radius: 28%;
+      object-fit: contain;
+    }
+
+    .center-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .dashboard-container {
+      background: white;
+      padding: 2.5rem 3rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 700px;
+      text-align: center;
+    }
+
+    h1, h2, h3 {
+      margin-bottom: 1rem;
+    }
+
+    #abonnements-container {
+      margin-top: 1rem;
+    }
+
+    .button-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .button-bar form,
+    .button-bar a {
+      flex: 1;
+    }
+
+    .button-bar button {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: background-color 0.2s ease;
+    }
+
+    .button-add {
+      background-color: #2ecc71;
+      color: white;
+    }
+
+    .button-add:hover {
+      background-color: #27ae60;
+    }
+
+    .button-list {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .button-list:hover {
+      background-color: #0056b3;
+    }
+
+    .button-logout {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .button-logout:hover {
+      background-color: #b52a37;
+    }
+  </style>
 </head>
 <body>
-    <h1>Bienvenue sur votre tableau de bord</h1>
 
-    <div>
-        <a href="{% url 'ajouter_abonnement' %}"><button type="button">Ajouter un abonnement</button></a>
-        <a href="{% url 'multiscribe-liste' %}"><button type="button">Voir tous mes abonnements</button></a>
+  <!-- ✅ Barre de navigation -->
+  <div class="navbar">
+    <img src="{% static 'images/logo3.png' %}" alt="Multiscribe" class="logo">
+    Multiscribe - Tableau de bord
+  </div>
 
-        
-        <form method="POST" action="{% url 'multiscribe-logout' %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit">Se déconnecter</button>
-        </form>
-    </div>
+  <!-- ✅ Contenu central -->
+  <div class="center-wrapper">
+    <div class="dashboard-container">
+      <h1>Bienvenue sur votre tableau de bord</h1>
 
-    <h2>Total mensuel (ce mois) : <span id="total-mensuel">0.00</span> TND</h2>
-    <h2>Total annuel estimé : <span id="total-annuel">0.00</span> TND</h2>
+      <h2>Total mensuel (ce mois) : <span id="total-mensuel">0.00</span> TND</h2>
+      <h2>Total annuel estimé : <span id="total-annuel">0.00</span> TND</h2>
 
-    <h3>Abonnements récents :</h3>
-    <div id="abonnements-container">
+      <h3>Abonnements récents :</h3>
+      <div id="abonnements-container">
         <p>Chargement...</p>
-    </div>
+      </div>
 
-    <script src="{% static 'js/home.js' %}"></script>
+      <!-- ✅ Boutons en bas -->
+      <div class="button-bar">
+        <a href="{% url 'ajouter_abonnement' %}">
+          <button type="button" class="button-add">Ajouter</button>
+        </a>
+
+        <a href="{% url 'multiscribe-liste' %}">
+          <button type="button" class="button-list">Mes abonnements</button>
+        </a>
+
+        <form method="POST" action="{% url 'multiscribe-logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="button-logout">Déconnexion</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="{% static 'js/home.js' %}"></script>
+
 </body>
 </html>
-
