@@ -64,6 +64,9 @@ def liste(request):
 
 
 
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+
 @login_required
 def ajouter_abonnement(request):
     if request.method == 'POST':
@@ -72,13 +75,17 @@ def ajouter_abonnement(request):
             abonnement = form.save(commit=False)
             abonnement.user = request.user
             abonnement.save()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
             messages.success(request, "Abonnement ajouté avec succès.")
             return redirect('multiscribe-liste')
     else:
         form = SubscriptionForm()
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        html_form = render_to_string('multiscribe/abonnement_form_partial.html', {'form': form}, request=request)
+        return JsonResponse({'html_form': html_form})
     return render(request, 'multiscribe/abonnement_form.html', {'form': form})
-
-
 
 
 @login_required
@@ -88,10 +95,16 @@ def modifier_abonnement(request, pk):
         form = SubscriptionForm(request.POST, instance=abonnement)
         if form.is_valid():
             form.save()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
             messages.success(request, "Abonnement modifié.")
             return redirect('multiscribe-liste')
     else:
         form = SubscriptionForm(instance=abonnement)
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        html_form = render_to_string('multiscribe/abonnement_form_partial.html', {'form': form}, request=request)
+        return JsonResponse({'html_form': html_form})
     return render(request, 'multiscribe/abonnement_form.html', {'form': form})
 
 

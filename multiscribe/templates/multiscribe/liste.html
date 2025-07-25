@@ -1,14 +1,10 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Liste des abonnements</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-  <!-- ✅ Police Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title>Mes abonnements - Multiscribe</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
 
   <style>
     body {
@@ -19,13 +15,15 @@
     }
 
     .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
       background-color: #5f37e0;
       color: white;
       display: flex;
       align-items: center;
-      justify-content: 	flex-start;
-      padding: 0.5rem ;
-      gap: 1rem;
+      padding: 0.5rem 1rem;
       font-size: 1.5rem;
       font-weight: 600;
       margin-bottom: 2rem;
@@ -34,7 +32,14 @@
     .navbar .logo {
       height: 70px;
       border-radius: 28%;
+      margin-right: 1rem;
       object-fit: contain;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 1rem;
     }
 
     h1 {
@@ -57,6 +62,57 @@
       background-color: #27ae60;
     }
 
+    .subscription-item {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .subscription-logo {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 12px;
+    }
+
+    .subscription-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .btn-modifier,
+    .btn-supprimer {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 8px;
+      margin-right: 8px;
+    }
+
+    .btn-modifier {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .btn-modifier:hover {
+      background-color: #2980b9;
+    }
+
+    .btn-supprimer {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .btn-supprimer:hover {
+      background-color: #c0392b;
+    }
+
     a {
       display: inline-block;
       margin-top: 2rem;
@@ -68,22 +124,11 @@
     a:hover {
       text-decoration: underline;
     }
-
-    .container {
-        padding: 0.7rem;
-      }
-      
-      .subscription-logo {
-        width: 30px;
-        height: 30px;
-        object-fit: contain;
-        border-radius: 50%;
-      }  
   </style>
 </head>
+
 <body>
 
-  <!-- ✅ Barre de navigation avec logo -->
   <div class="navbar">
     <img src="{% static 'images/logo3.png' %}" alt="Logo Multiscribe" class="logo">
     Multiscribe - Mes abonnements
@@ -91,17 +136,41 @@
 
   <div class="container">
     <h1>Mes abonnements</h1>
-  
-    <button id="btn-ajouter">+ Ajouter un abonnement</button>
-    <div id="form-ajouter" style="display:none;"></div>
-  
-    <div id="abonnements-container"></div>
-  
+
+    <a href="{% url 'ajouter_abonnement' %}">
+      <button id="btn-ajouter">+ Ajouter un abonnement</button>
+    </a>
+
+    <div id="abonnements-container">
+      {% if subscriptions %}
+        {% for abonnement in subscriptions %}
+          <div class="subscription-item">
+            {% with logo_path='images/logos/'|add:abonnement.name|lower|add:'.png' %}
+              <img src="{% static logo_path %}" 
+                   alt="{{ abonnement.name }}" 
+                   class="subscription-logo"
+                   onerror="this.onerror=null;this.src='{% static 'images/logos/default.png' %}'">
+            {% endwith %}
+            <span class="subscription-name">{{ abonnement.name }}</span><br>
+            <small>{{ abonnement.price }} TND ({{ abonnement.billing_type }}) — Paiement le {{ abonnement.next_payment_date }}</small>
+
+            <form method="post" action="{% url 'modifier_abonnement' abonnement.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn-modifier">Modifier</button>
+            </form>
+            <form method="post" action="{% url 'supprimer_abonnement' abonnement.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn-supprimer">Supprimer</button>
+            </form>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>Vous n’avez encore aucun abonnement.</p>
+      {% endif %}
+    </div>
+
     <a href="{% url 'multiscribe-home' %}">← Retour au tableau de bord</a>
   </div>
-  
-
-  <script src="{% static 'js/main.js' %}"></script>
 
 </body>
 </html>
