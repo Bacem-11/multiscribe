@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("abonnements-container");
+  const btnAjouter = document.getElementById("btn-ajouter");
+  const formAjouter = document.getElementById("form-ajouter");
+
+  // 🔽 Charger et afficher les abonnements
   fetch("/api/abonnements/")
     .then((res) => res.json())
     .then((abonnements) => {
-      const container = document.getElementById("abonnements-container");
-
       if (!abonnements.length) {
         container.innerHTML = "<p>Aucun abonnement enregistré.</p>";
         return;
@@ -13,86 +16,132 @@ document.addEventListener("DOMContentLoaded", () => {
         const div = document.createElement("div");
         div.setAttribute("data-id", ab.id);
 
-        const logoURL = getLogoURL(ab.nom); // 🔁 ici on récupère le bon logo
+        const logoURL = getLogoURL(ab.nom);
 
         div.innerHTML = `
-  <div style="display:flex; align-items:center; gap:10px; margin-bottom:0.5rem;">
-    <img src="${logoURL}" alt="${ab.nom}" class="subscription-logo">
-    <strong class="nom">${ab.nom}</strong> - 
-    <span class="prix">${ab.prix}</span> TND 
-    (<span class="type">${ab.type_facturation === "M" ? "monthly" : "yearly"}</span>)
-  </div>
-  <div>Prochain paiement : ${ab.date_prochain_paiement}</div>
-  <button class="btn-modifier" data-id="${ab.id}">Modifier</button>
-  <span style="margin: 0 0.5rem;">|</span>
-  <button class="btn-supprimer" data-id="${ab.id}">Supprimer</button>
-`;
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:0.5rem;">
+            <img src="${logoURL}" alt="${ab.nom}" class="subscription-logo">
+            <strong class="nom">${ab.nom}</strong> - 
+            <span class="prix">${ab.prix}</span> TND 
+            (<span class="type">${ab.type_facturation === "M" ? "monthly" : "yearly"}</span>)
+          </div>
+          <div>Prochain paiement : ${ab.date_prochain_paiement}</div>
+          <button class="btn-modifier" data-id="${ab.id}">Modifier</button>
+          <span style="margin: 0 0.5rem;">|</span>
+          <button class="btn-supprimer" data-id="${ab.id}">Supprimer</button>
+          <div class="form-modifier" style="display:none; margin-top:1rem;"></div>
+        `;
         container.appendChild(div);
       });
 
-      // 🔴 Supprimer via AJAX
-      document.querySelectorAll(".btn-supprimer").forEach((button) => {
-        button.addEventListener("click", () => {
-          const id = button.dataset.id;
-          if (!confirm("Confirmer la suppression ?")) return;
+      activerBoutons();
+    });
 
-          fetch(`/supprimer/${id}/`, {
-            method: "POST",
-            headers: {
-              "X-CSRFToken": getCSRFToken(),
-            },
-          }).then((res) => {
-            if (res.ok || res.redirected) {
-              document.querySelector(`div[data-id="${id}"]`)?.remove();
-            }
-          });
-        });
-      });
+  // 🔄 Fonction pour activer les boutons Modifier / Supprimer
+  function activerBoutons() {
+    // ✅ Supprimer
+    document.querySelectorAll(".btn-supprimer").forEach((button) => {
+      button.addEventListener("click", () => {
+        const id = button.dataset.id;
+        if (!confirm("Confirmer la suppression ?")) return;
 
-      // 🟡 Modifier via AJAX
-      document.querySelectorAll(".btn-modifier").forEach((button) => {
-        button.addEventListener("click", () => {
-          const id = button.dataset.id;
-          const parent = button.closest("div[data-id]");
-          const formContainer = parent.querySelector(".form-modifier");
-          formContainer.style.display = "block";
-
-          fetch(`/modifier/${id}/`, {
-            headers: { "X-Requested-With": "XMLHttpRequest" }
-          })
-            .then((res) => res.text())
-            .then((html) => {
-              formContainer.innerHTML = html;
-
-              const form = formContainer.querySelector("form");
-              form.addEventListener("submit", (e) => {
-                e.preventDefault();
-
-                const formData = new FormData(form);
-
-                fetch(`/modifier/${id}/`, {
-                  method: "POST",
-                  headers: {
-                    "X-CSRFToken": getCSRFToken(),
-                  },
-                  body: formData
-                })
-                  .then((res) => {
-                    if (res.redirected) {
-                      location.reload(); // ou actualisation partielle possible
-                    } else {
-                      return res.text().then((html) => {
-                        formContainer.innerHTML = html;
-                      });
-                    }
-                  });
-              });
-            });
+        fetch(`/supprimer/${id}/`, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCSRFToken(),
+          },
+        }).then((res) => {
+          if (res.ok || res.redirected) {
+            document.querySelector(`div[data-id="${id}"]`)?.remove();
+          }
         });
       });
     });
+
+    // ✅ Modifier
+    document.querySelectorAll(".btn-modifier").forEach((button) => {
+      button.addEventListener("click", () => {
+        const id = button.dataset.id;
+        const parent = button.closest("div[data-id]");
+        const formContainer = parent.querySelector(".form-modifier");
+
+        formContainer.style.display = "block";
+
+        fetch(`/modifier/${id}/`, {
+          headers: { "X-Requested-With": "XMLHttpRequest" },
+        })
+          .then((res) => res.text())
+          .then((html) => {
+            formContainer.innerHTML = html;
+
+            const form = formContainer.querySelector("form");
+            form.addEventListener("submit", (e) => {
+              e.preventDefault();
+              const formData = new FormData(form);
+
+              fetch(`/modifier/${id}/`, {
+                method: "POST",
+                headers: {
+                  "X-CSRFToken": getCSRFToken(),
+                },
+                body: formData,
+              }).then((res) => {
+                if (res.redirected) {
+                  location.reload();
+                } else {
+                  return res.text().then((html) => {
+                    formContainer.innerHTML = html;
+                  });
+                }
+              });
+            });
+          });
+      });
+    });
+  }
+
+  // ✅ Gérer le bouton "Ajouter un abonnement"
+  if (btnAjouter && formAjouter) {
+    btnAjouter.addEventListener("click", () => {
+      const visible = formAjouter.style.display === "block";
+      formAjouter.style.display = visible ? "none" : "block";
+
+      if (!visible) {
+        fetch("/ajouter/", {
+          headers: { "X-Requested-With": "XMLHttpRequest" },
+        })
+          .then((res) => res.text())
+          .then((html) => {
+            formAjouter.innerHTML = html;
+
+            const form = formAjouter.querySelector("form");
+            form.addEventListener("submit", (e) => {
+              e.preventDefault();
+              const formData = new FormData(form);
+
+              fetch("/ajouter/", {
+                method: "POST",
+                headers: {
+                  "X-CSRFToken": getCSRFToken(),
+                },
+                body: formData,
+              }).then((res) => {
+                if (res.redirected) {
+                  location.reload();
+                } else {
+                  return res.text().then((html) => {
+                    formAjouter.innerHTML = html;
+                  });
+                }
+              });
+            });
+          });
+      }
+    });
+  }
 });
 
+// ✅ CSRF helper
 function getCSRFToken() {
   const cookie = document.cookie
     .split("; ")
@@ -100,7 +149,7 @@ function getCSRFToken() {
   return cookie ? cookie.split("=")[1] : "";
 }
 
-// ✅ Fonction pour récupérer l’image correspondante au nom
+// ✅ Logo dynamique
 function getLogoURL(nom) {
   nom = nom.toLowerCase();
 
