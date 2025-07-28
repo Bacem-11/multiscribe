@@ -1,0 +1,51 @@
+/* Container du formulaire */
+.abonnement-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 400px;
+    margin: auto;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Champs individuels */
+  .abonnement-form .form-field {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .abonnement-form .form-field label {
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .abonnement-form .form-field input,
+  .abonnement-form .form-field select {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+  
+  /* Bouton de soumission */
+  .abonnement-form .form-button {
+    padding: 0.8rem;
+    background-color: #5f37e0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .abonnement-form .form-button:hover {
+    background-color: #482abf;
+  }
+  

@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from dateutil.relativedelta import relativedelta
 from datetime import date
-from django.db import models
-
 
 class Subscription(models.Model):
     BILLING_CHOICES = [
@@ -17,6 +15,8 @@ class Subscription(models.Model):
     billing_type = models.CharField(max_length=10, choices=BILLING_CHOICES)
     next_payment_date = models.DateField()
 
+    # ✅ Nouveau champ logo
+    logo = models.URLField(blank=True, null=True, help_text="URL du logo de l'abonnement (facultatif)")
+
     def __str__(self):
         return f"{self.name} - {self.user.username}"
-

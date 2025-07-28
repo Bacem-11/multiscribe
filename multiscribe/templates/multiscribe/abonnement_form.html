@@ -128,7 +128,12 @@
 
       <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% for field in form %}
+          <div>
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+          </div>
+        {% endfor %}
         <button type="submit">
           {% if form.instance.pk %}Mettre à jour{% else %}Ajouter{% endif %}
         </button>

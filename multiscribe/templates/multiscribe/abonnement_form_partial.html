@@ -1,0 +1,13 @@
+<!-- multiscribe/templates/multiscribe/abonnement_form_partial.html -->
+
+<form method="post" id="form-ajouter">
+    {% csrf_token %}
+    {% for field in form %}
+      <div>
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+      </div>
+    {% endfor %}
+    <button type="submit">Ajouter</button>
+  </form>
+  

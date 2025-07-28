@@ -40,10 +40,18 @@
       max-width: 800px;
       margin: auto;
       padding: 1rem;
+      padding-top: 100px;
     }
 
     h1 {
       text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #444;
       margin-bottom: 2rem;
     }
 
@@ -131,46 +139,25 @@
 
   <div class="navbar">
     <img src="{% static 'images/logo3.png' %}" alt="Logo Multiscribe" class="logo">
-    Multiscribe - Mes abonnements
+    Multiscribe - Mes abonnements 
   </div>
 
   <div class="container">
     <h1>Mes abonnements</h1>
+    <h2>les abonnements de "{{ request.user.username }}"</h2>
 
-    <a href="{% url 'ajouter_abonnement' %}">
-      <button id="btn-ajouter">+ Ajouter un abonnement</button>
-    </a>
+    <button id="btn-ajouter">+ Ajouter un abonnement</button>
 
-    <div id="abonnements-container">
-      {% if subscriptions %}
-        {% for abonnement in subscriptions %}
-          <div class="subscription-item">
-            {% with logo_path='images/logos/'|add:abonnement.name|lower|add:'.png' %}
-              <img src="{% static logo_path %}" 
-                   alt="{{ abonnement.name }}" 
-                   class="subscription-logo"
-                   onerror="this.onerror=null;this.src='{% static 'images/logos/default.png' %}'">
-            {% endwith %}
-            <span class="subscription-name">{{ abonnement.name }}</span><br>
-            <small>{{ abonnement.price }} TND ({{ abonnement.billing_type }}) — Paiement le {{ abonnement.next_payment_date }}</small>
+<!-- ✅ Zone qui contiendra dynamiquement le formulaire d'ajout -->
+<div id="ajout-form-container" style="display: none;"></div>
 
-            <form method="post" action="{% url 'modifier_abonnement' abonnement.id %}">
-              {% csrf_token %}
-              <button type="submit" class="btn-modifier">Modifier</button>
-            </form>
-            <form method="post" action="{% url 'supprimer_abonnement' abonnement.id %}">
-              {% csrf_token %}
-              <button type="submit" class="btn-supprimer">Supprimer</button>
-            </form>
-          </div>
-        {% endfor %}
-      {% else %}
-        <p>Vous n’avez encore aucun abonnement.</p>
-      {% endif %}
-    </div>
+    <!-- ✅ Zone dynamique remplie par main.js -->
+    <div id="abonnements-container"></div>
 
     <a href="{% url 'multiscribe-home' %}">← Retour au tableau de bord</a>
   </div>
 
+  <!-- ✅ Chargement du script JS -->
+  <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>

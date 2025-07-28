@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'multiscribe',
+    'rest_framework',
     
 ]
 
@@ -123,7 +124,7 @@ STATIC_URL = '/static/'
 
 import os
 
-STATICFILES_DIRS = [ BASE_DIR / "static" ]
+
 
 
 # Default primary key field type
@@ -137,3 +138,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'multiscribe-login'
 LOGIN_REDIRECT_URL = 'multiscribe-home'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}

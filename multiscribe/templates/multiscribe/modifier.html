@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Modifier {{ abonnement.nom }}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  <h2>Modifier l’abonnement : {{ abonnement.nom }}</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enregistrer les modifications</button>
+  </form>
+
+  <a href="{% url 'multiscribe-liste' %}">← Retour à la liste</a>
+
+</body>
+</html>

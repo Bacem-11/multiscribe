@@ -88,24 +88,29 @@ def ajouter_abonnement(request):
     return render(request, 'multiscribe/abonnement_form.html', {'form': form})
 
 
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Subscription
+from .forms import SubscriptionForm
+from django.contrib.auth.decorators import login_required
+
 @login_required
 def modifier_abonnement(request, pk):
     abonnement = get_object_or_404(Subscription, pk=pk, user=request.user)
+
     if request.method == 'POST':
         form = SubscriptionForm(request.POST, instance=abonnement)
         if form.is_valid():
             form.save()
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'success': True})
-            messages.success(request, "Abonnement modifié.")
             return redirect('multiscribe-liste')
     else:
         form = SubscriptionForm(instance=abonnement)
 
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        html_form = render_to_string('multiscribe/abonnement_form_partial.html', {'form': form}, request=request)
-        return JsonResponse({'html_form': html_form})
-    return render(request, 'multiscribe/abonnement_form.html', {'form': form})
+    return render(request, 'multiscribe/abonnement_form.html', {
+        'form': form,
+        'abonnement': abonnement  # <-- important
+    })
+
+
 
 
 
@@ -140,3 +145,17 @@ def abonnements_json(request):
             'date_prochain_paiement': ab.next_payment_date.strftime('%Y-%m-%d'),
         })
     return JsonResponse(data, safe=False)
+
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Subscription
+from .serializers import SubscriptionSerializer
+
+@api_view(['GET'])
+def api_abonnements(request):
+    abonnements = Subscription.objects.filter(user=request.user)
+    serializer = SubscriptionSerializer(abonnements, many=True)
+    return Response(serializer.data)
+
