@@ -9,39 +9,47 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      abonnements.forEach((ab) => {
-        const div = document.createElement("div");
-        div.setAttribute("data-id", ab.id);
+      container.classList.add("cards-container"); // Ajout de la classe pour le grid
 
-        // ✅ Option 2 : Logo basé sur le nom de l'abonnement (ex: spotify → spotify.png)
+      abonnements.forEach((ab) => {
+        const card = document.createElement("div");
+        card.classList.add("subscription-card");
+        card.setAttribute("data-id", ab.id);
+
         const sanitizedName = ab.name.toLowerCase().replace(/\s+/g, '');
         const logoURL = `/static/images/logos/${sanitizedName}.png`;
 
-        div.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
-            <img src="${logoURL}" alt="logo" onerror="this.onerror=null; this.src='/static/images/logos/default.png';" style="width: 30px; height: 30px; border-radius: 50%; object-fit: contain;">
-            <strong class="nom">${ab.name}</strong>
+        card.innerHTML = `
+          <div class="card-header">
+            <img src="${logoURL}" alt="logo" 
+                 onerror="this.onerror=null; this.src='/static/images/logos/default.png';" 
+                 class="subscription-logo">
+            <span class="subscription-name">${ab.name}</span>
           </div>
-          <span class="prix">${ab.price}</span> TND 
-          (<span class="type">${ab.billing_type}</span>)<br>
-          Prochain paiement : <span class="date">${ab.next_payment_date}</span><br>
 
-          <button class="btn-modifier" data-id="${ab.id}">Modifier</button>
-          <div class="form-modifier" style="display:none;"></div>
+          <div class="card-body">
+            <p><strong>Prix :</strong> ${ab.price} TND</p>
+            <p><strong>Type :</strong> ${ab.billing_type}</p>
+            <p><strong>Prochain paiement :</strong> ${ab.next_payment_date}</p>
+          </div>
 
-          <form method="post" action="/supprimer/${ab.id}/" style="display:inline;">
+          <div class="card-footer">
+            <button class="btn-modifier" data-id="${ab.id}">Modifier</button>
+            <div class="form-modifier" style="display:none;"></div>
+
+            <form method="post" action="/supprimer/${ab.id}/" style="display:inline;">
               <input type="hidden" name="csrfmiddlewaretoken" value="${getCSRFToken()}">
-              <button type="submit" class="btn-supprimer" style="background-color:#dc3545; color:white; border:none; padding:6px 12px; border-radius:4px;">Supprimer</button>
-          </form>
-          <hr>
+              <button type="submit" class="btn-supprimer">Supprimer</button>
+            </form>
+          </div>
         `;
-        container.appendChild(div);
+        container.appendChild(card);
       });
 
       attachModifierListeners();
     });
 
-  // ✅ Bouton Ajouter
+  // Bouton Ajouter
   const ajouterBtn = document.getElementById("btn-ajouter");
   if (ajouterBtn) {
     ajouterBtn.addEventListener("click", () => {
@@ -49,11 +57,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ✅ Confirmation avant suppression
+  // Confirmation avant suppression
   document.addEventListener("submit", (e) => {
     if (e.target.matches("form[action^='/supprimer/']")) {
-      const confirmed = confirm("Êtes-vous sûr de vouloir supprimer cet abonnement ?");
-      if (!confirmed) {
+      if (!confirm("Êtes-vous sûr de vouloir supprimer cet abonnement ?")) {
         e.preventDefault();
       }
     }
@@ -64,7 +71,7 @@ function attachModifierListeners() {
   document.querySelectorAll(".btn-modifier").forEach((button) => {
     button.addEventListener("click", () => {
       const id = button.dataset.id;
-      const parent = button.closest("div[data-id]");
+      const parent = button.closest(".subscription-card");
       const formContainer = parent.querySelector(".form-modifier");
       formContainer.style.display = "block";
 
@@ -102,7 +109,6 @@ function attachModifierListeners() {
   });
 }
 
-// ✅ CSRF helper
 function getCSRFToken() {
   const cookie = document.cookie
     .split("; ")

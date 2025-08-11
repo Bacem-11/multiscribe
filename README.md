@@ -26,3 +26,6 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py createsuperuser  # pour accéder à l'admin
 python manage.py runserver
+
+## Auteur 
+Bacem Touati 2025

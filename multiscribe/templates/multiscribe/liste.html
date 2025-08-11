@@ -13,7 +13,7 @@
       background-color: #d3cee1;
       font-family: 'Poppins', sans-serif;
     }
-
+    
     .navbar {
       position: fixed;
       top: 0;
@@ -28,33 +28,33 @@
       font-weight: 600;
       margin-bottom: 2rem;
     }
-
+    
     .navbar .logo {
       height: 70px;
       border-radius: 28%;
       margin-right: 1rem;
       object-fit: contain;
     }
-
+    
     .container {
-      max-width: 800px;
+      max-width: 1000px;
       margin: auto;
       padding: 1rem;
       padding-top: 100px;
     }
-
+    
     h1 {
       text-align: center;
       margin-bottom: 1rem;
     }
-
+    
     h2 {
       text-align: center;
       font-size: 1.1rem;
       color: #444;
       margin-bottom: 2rem;
     }
-
+    
     #btn-ajouter {
       padding: 10px 20px;
       background-color: #2ecc71;
@@ -65,62 +65,87 @@
       font-size: 1rem;
       margin-bottom: 1.5rem;
     }
-
+    
     #btn-ajouter:hover {
       background-color: #27ae60;
     }
-
-    .subscription-item {
-      background-color: white;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    /* Container en mode grille */
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
     }
-
+    
+    /* Carte d’abonnement */
+    .subscription-card {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
     .subscription-logo {
-      width: 36px;
-      height: 36px;
-      object-fit: contain;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      vertical-align: middle;
-      margin-right: 12px;
+      object-fit: contain;
     }
-
+    
     .subscription-name {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: 600;
     }
-
-    .btn-modifier,
-    .btn-supprimer {
-      padding: 8px 16px;
-      font-size: 0.9rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 8px;
-      margin-right: 8px;
+    
+    .card-body p {
+      margin: 6px 0;
+      font-size: 0.95rem;
+      color: #555;
     }
-
+    
+    .card-footer {
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    /* Boutons */
     .btn-modifier {
       background-color: #3498db;
       color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
     }
-
-    .btn-modifier:hover {
-      background-color: #2980b9;
-    }
-
+    
     .btn-supprimer {
       background-color: #e74c3c;
       color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
     }
-
+    
+    .btn-modifier:hover {
+      background-color: #2980b9;
+    }
+    
     .btn-supprimer:hover {
       background-color: #c0392b;
     }
-
+    
     a {
       display: inline-block;
       margin-top: 2rem;
@@ -128,10 +153,25 @@
       text-decoration: none;
       font-weight: 600;
     }
-
+    
     a:hover {
       text-decoration: underline;
     }
+    
+    @media (max-width: 600px) {
+      .cards-container {
+        grid-template-columns: 1fr;
+      }
+    
+      .subscription-card {
+        padding: 12px;
+      }
+    
+      .subscription-name {
+        font-size: 1rem;
+      }
+    }
+    
   </style>
 </head>
 
@@ -148,16 +188,16 @@
 
     <button id="btn-ajouter">+ Ajouter un abonnement</button>
 
-<!-- ✅ Zone qui contiendra dynamiquement le formulaire d'ajout -->
+<!----> Zone qui contiendra dynamiquement le formulaire d'ajout -->
 <div id="ajout-form-container" style="display: none;"></div>
 
-    <!-- ✅ Zone dynamique remplie par main.js -->
+    <!--  Zone dynamique remplie par main.js -->
     <div id="abonnements-container"></div>
 
     <a href="{% url 'multiscribe-home' %}">← Retour au tableau de bord</a>
   </div>
 
-  <!-- ✅ Chargement du script JS -->
+  <!-- Chargement du script JS -->
   <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
