@@ -14,8 +14,6 @@ class Subscription(models.Model):
     price = models.DecimalField(max_digits=7, decimal_places=2)
     billing_type = models.CharField(max_length=10, choices=BILLING_CHOICES)
     next_payment_date = models.DateField()
-
-    # ✅ Nouveau champ logo
     logo = models.URLField(blank=True, null=True, help_text="URL du logo de l'abonnement (facultatif)")
 
     def __str__(self):
